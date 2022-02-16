@@ -1,0 +1,21 @@
+<table>
+<thead>
+    <tr>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+    </tr>
+</thead>
+<tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{ object.date }}</td>
+        <td>{{ object.value }}</td>
+        <td>{{ object.account }}</td>
+        <td>{{ object.no_op }}</td>
+
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
