@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>Страница</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Список счетов</td>
+            <td><a href="{% url 'account_list' %}">Перейти</a></td>
+        </tr>
+        <tr>
+            <td>Список операций</td>
+            <td><a href="{% url 'operation_list' %}">Перейти</a></td>
+        </tr>
+        <tr>
+            <td>Список ежедневных трат</td>
+            <td><a href="{% url 'dailyexpenses_list' %}">Перейти</a></td>
+        </tr>
+    </tbody>
+    {% block content %}
+    {% endblock content %}
+</table>

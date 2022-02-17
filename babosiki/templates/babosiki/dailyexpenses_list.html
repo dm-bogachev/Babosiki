@@ -1,10 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
 <table>
 <thead>
     <tr>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
-        <th>4</th>
+        <th>Дата</th>
+        <th>Баланс</th>
+        <th>Название счёта</th>
+        <th>Служебное значение</th>
     </tr>
 </thead>
 <tbody>
@@ -19,3 +21,4 @@
     {% endfor %}
 </tbody>
 </table>
+{% endblock content %}

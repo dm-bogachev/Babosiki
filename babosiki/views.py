@@ -1,4 +1,5 @@
 from cmath import nan
+from dataclasses import fields
 import datetime
 import re
 import pandas as pd
@@ -58,6 +59,7 @@ class AccountList(ListView):
 
 class OperationList(ListView):
     model = Operation
+    ordering = ['-date']
 
 
 class OperationCreate(CreateView):
@@ -67,6 +69,12 @@ class OperationCreate(CreateView):
     def get_success_url(self):
         return reverse_lazy('operation_list')
 
+class OperationUpdate(UpdateView):
+    model = Operation
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse_lazy('operation_list')
 
 class MyView(View):
 
