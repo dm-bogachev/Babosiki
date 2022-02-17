@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party
     'simple_history',
+    'crispy_forms',
+    'crispy_bootstrap5',
     # Application
     'babosiki.apps.BabosikiConfig',
 ]
@@ -123,3 +125,6 @@ USE_L10N = True
 USE_TZ = True
 SHORT_DATE_FORMAT = 'j.m.Y'
 DATE_INPUT_FORMATS = ['%d.%m.%Y']
+# ---
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

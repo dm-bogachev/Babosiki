@@ -29,13 +29,12 @@ def update_accounts():
     accounts = Account.objects.all()
     for item in accounts:
         daily_expenses = DailyExpenses.objects.filter(account=item.id)
-        if item.no_d != len(daily_expenses):
-            value = 0
-            for daily_expense in daily_expenses:
-                value += daily_expense.value
-            item.value = value + item.initial_value
-            item.no_d = len(daily_expenses)
-            item.save()
+        value = 0
+        for daily_expense in daily_expenses:
+            value += daily_expense.value
+        item.value = value + item.initial_value
+        item.no_d = len(daily_expenses)
+        item.save()
 
 
 class DailyExpensesList(ListView):
