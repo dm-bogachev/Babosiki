@@ -10,7 +10,7 @@ class Account(models.Model):
                                verbose_name='Комментарий',)
     value = models.FloatField(verbose_name='Баланс',)
     initial_value = models.FloatField(verbose_name='Начальный баланс',)
-    # For internal use
+    # # For internal use
     no_d = models.IntegerField(default=0,
                                verbose_name='Количество дней',)
 
@@ -97,5 +97,5 @@ class DailyExpenses(models.Model):
 
     class Meta:
         unique_together = ('date', 'account',)
-        verbose_name = 'Дельта баланса'
-        verbose_name_plural = 'Дельты баланса'
+        verbose_name = 'Ежедневные расходы'
+        verbose_name_plural = 'Ежедневные расходы'

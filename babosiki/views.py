@@ -83,34 +83,37 @@ class MyView(View):
             r'C:\Users\dmbog\Программирование\Проекты\Babosiki\nodjango\money.xlsx')
         xl = xl.parse(2)
         for value in xl.values:
-            type = value[2]
-            date = value[0]
-            category = value[3]
-            description = value[5]
-            repeat = value[4]
-            if repeat is not True:
-                repeat = False
-            account_id = value[1]
-            val = value[6]
-##
-            account = Account.objects.get(pk=account_id)
-            #date = datetime.datetime.fromtimestamp(date).date()
-            cat = OperationCategory.objects.filter(name=category).first()
-            if not cat:
-                cat = OperationCategory(name=category)
-                cat.save()
-            operation = Operation(date=date, type=type, description=description,
-                                  value=val, account=account, repeatability=repeat,
-                                  category=cat)
-
-            operation.save()
-            daily_expense = DailyExpenses.objects.filter(
-                date=date, account=account_id).first()
-            if not daily_expense:
+            try:
+                type = value[2]
+                date = value[0]
+                category = value[3]
+                description = value[5]
+                repeat = value[4]
+                if repeat is not True:
+                    repeat = False
+                account_id = value[1]
+                val = value[6]
+    ##
                 account = Account.objects.get(pk=account_id)
-                daily_expense = DailyExpenses(
-                    date=date, value=type*val, account=account)
-                daily_expense.save()
+                #date = datetime.datetime.fromtimestamp(date).date()
+                cat = OperationCategory.objects.filter(name=category).first()
+                if not cat:
+                    cat = OperationCategory(name=category)
+                    cat.save()
+                operation = Operation(date=date, type=type, description=description,
+                                    value=val, account=account, repeatability=repeat,
+                                    category=cat)
+
+                operation.save()
+                daily_expense = DailyExpenses.objects.filter(
+                    date=date, account=account_id).first()
+                if not daily_expense:
+                    account = Account.objects.get(pk=account_id)
+                    daily_expense = DailyExpenses(
+                        date=date, value=type*val, account=account)
+                    daily_expense.save()
+                    pass
+            except Exception:
                 pass
         pass
 
