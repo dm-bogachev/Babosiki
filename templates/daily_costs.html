@@ -1,0 +1,47 @@
+{% extends 'master.html' %}
+{% block content %}
+
+{% if delta > 0 %}
+<h2>Получено за день</h2>
+{% else %}
+<h2>Потрачено за день</h2>
+{% endif %}
+{{delta}}
+<h2>Список операций</h2>
+<table id="filteredTable" class="table">
+    <thead>
+        <tr class="header">
+            <th>Дата</th>
+            <th>Счёт</th>
+            <th>Тип</th>
+            <th>Категория</th>
+            <th>Описание</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for operation in operations %}
+        <tr>
+            <td>{{ operation.date}}</td>
+            <td>{{ operation.account }}</td>
+            <td>            
+                {% if operation.type == 1 %}
+                    Пополнение
+                {% else %}
+                    Списание
+                {% endif %}
+            </td>
+            <td>            
+                {% if operation.category %}
+                    {{operation.category}}
+                {% else %}
+                    Не указана
+                {% endif %}
+            </td>
+            <td>{{ operation.description }}</td>
+            <td>{% widthratio operation.value 1 operation.type %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

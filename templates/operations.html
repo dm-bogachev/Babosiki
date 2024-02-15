@@ -1,0 +1,47 @@
+{% extends 'master.html' %}
+{% block content %}
+
+<table id="filteredTable" class="table">
+    <thead>
+        <tr class="header">
+            <th>Дата</th>
+            <th>Счёт</th>
+            <th>Тип</th>
+            <th>Категория</th>
+            <th>Описание</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for operation in operations %}
+        <tr>
+            <td><a href = "{% url 'operations_day' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
+            <td>{{ operation.account }}</td>
+            <td>            
+                {% if operation.type == 1 %}
+                    Пополнение
+                {% else %}
+                    Списание
+                {% endif %}
+            </td>
+            <td>            
+                {% if operation.category %}
+                    {{operation.category}}
+                {% else %}
+                    Не указана
+                {% endif %}
+            </td>
+            <td>{{ operation.description }}</td>
+            <td>            
+                {% if operation.type == 1 %}
+                    {{operation.value}}
+                {% else %}
+                    -{{operation.value}}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
