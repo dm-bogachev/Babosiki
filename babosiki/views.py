@@ -13,12 +13,17 @@ class OperationTransferFormView(FormView):
         form.transfer()
         return super().form_valid(form)
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 class OperationListView(TemplateView):
     template_name = "operation_list.html"
 
     def get_context_data(self, **kwargs):
-        operations = Operation.objects.all()
+        accounts = Account.objects.filter(user=self.request.user)
+        operations = Operation.objects.filter(account__id__in=accounts.all())
         context = super().get_context_data(**kwargs)
         context['operations'] = operations
         return context
@@ -30,13 +35,14 @@ class OperationDailyListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         date = self.kwargs.get('date', None)
-        operations = Operation.objects.filter(date=date)
-
+        accounts = Account.objects.filter(user=self.request.user, calculated=True)
+        operations = Operation.objects.filter(date=date, account__id__in=accounts.all())
         delta = 0.0
         for operation in operations:
             delta += operation.value*operation.type
 
-
+        accounts = Account.objects.filter(user=self.request.user)
+        operations = Operation.objects.filter(date=date, account__id__in=accounts.all())
         context = super().get_context_data(**kwargs)
         context['operations'] = operations
         context['delta'] = delta
@@ -124,9 +130,17 @@ class AccountListView(TemplateView):
     template_name = "account_list.html"
 
     def get_context_data(self, **kwargs):
+        accounts= Account.objects.filter(user=self.request.user)
+        account_values = {}
+        for account in accounts:
+            operations = Operation.objects.filter(account=account)
+            total_sum = 0
+            for operation in operations:
+                total_sum += operation.type*operation.value
+            account_values[account] = total_sum
         context = super().get_context_data(**kwargs)
-        context['accounts'] = Account.objects.filter(user=self.request.user)
-        context['operations'] = Operation.objects.all()
+        context['accounts'] = accounts
+        context['account_values'] = account_values
         return context
 
 
@@ -166,7 +180,8 @@ class DailyDeltaView(TemplateView):
     template_name = 'daily_costs.html'
 
     def __get_unique_dates(self):
-        operations = Operation.objects.all()
+        accounts = Account.objects.filter(user=self.request.user)
+        operations = Operation.objects.filter(account__id__in=accounts.all())
         dates = []
         
         for operation in operations:
@@ -195,7 +210,9 @@ class DailyDeltaView(TemplateView):
         for date in self.dates_delta:
             daily_cost = 0
             for account in self.dates_delta[date]:
-                daily_cost += self.dates_delta[date][account]
+                if account.calculated or account.type == 1:
+                    daily_cost += self.dates_delta[date][account]
+
             daily_costs[date] = daily_cost
         self.daily_costs = daily_costs
 

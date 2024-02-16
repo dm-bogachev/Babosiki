@@ -1,8 +1,9 @@
+
 {% extends 'master.html' %}
 {% block content %}
 
 {% for date, accounts in delta.items %}
-    <h1>{{date}}</h1>
+    <h1><a href="{% url 'operation_list_daily' date|date:"Y-m-d" %}">{{date}}</a></h1>
     {% for account, value in accounts.items %}
     <p>{{account}} : {{value}}</p>
     {% endfor %}
@@ -17,3 +18,22 @@
 </br>
 {% endfor %}
 {% endblock content %}
+<!--
+<table class="table">
+    <thead>
+        <tr class="header">
+            <th>Дата</th>
+            {% for date, accounts in delta.items %}
+                {% for account, value in accounts.items %}
+                    <th>{{account}}</th>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            
+        </tr>
+    </tbody>
+</table>
+-->

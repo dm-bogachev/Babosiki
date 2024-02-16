@@ -1,8 +1,8 @@
 {% extends 'master.html' %}
 {% block content %}
-<h2><a href = "{% url 'category_create' %}">Добавить</a></h2>
+<h1><a href = "{% url 'category_create' %}">Добавить</a></h1>
 {% for object in object_list %}
-{{object}}
+<h2>{{object}}  <a href = "{% url 'category_edit'  pk=object.pk %}">Изменить</a>  |  <a href = "{% url 'category_edit' pk=object.pk %}">Удалить</a></h2>
 </br>
 {% endfor %}
 {% endblock content %}

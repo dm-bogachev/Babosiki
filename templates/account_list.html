@@ -1,8 +1,54 @@
+
 {% extends 'master.html' %}
 {% block content %}
-<h2><a href = "{% url 'account_create' %}">Добавить</a></h2>
-{% for object in accounts %}
-{{object}}
+<h1>Список счетов:</h1>
 </br>
-{% endfor %}
+<h2><a href = "{% url 'account_create' %}">Новый счёт</a></h2>
+</br>
+<table class="table">
+    <thead>
+        <tr class="header">
+            <th>Имя счёта</th>
+            <th>Комментарий</th>
+            <th>Тип</th>
+            <th>Начальный баланс</th>
+            <th>Вычисляемый</th>
+            <th>Баланс</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in accounts %}
+        <tr>
+            <td><a href = "{% url 'account_detail' pk=object.pk %}">{{object.name}}</a></td>
+            <td>{{object.description}}</td>
+            <td>                
+                {% if operation.type == 1 %}
+                    Дебетовый
+                {% else %}
+                    Кредитный
+                {% endif %}
+            </td>
+            <td>{{object.initial_balance}}р</td>
+            <td>                
+                {% if object.calculated == True %}
+                    Да
+                {% else %}
+                    Нет
+                {% endif %}
+            </td>
+            <td>
+                {% for account, value in account_values.items %}
+                    {% if account == object %}
+                        {{value}}р
+                    {%endif%}
+                {% endfor %}
+            </td>
+            <td><a href = "{% url 'account_edit' pk=object.pk %}">Изменить</a> | <a href = "{% url 'account_delete' pk=object.pk %}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock content %}
