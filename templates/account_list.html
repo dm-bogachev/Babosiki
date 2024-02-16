@@ -1,0 +1,8 @@
+{% extends 'master.html' %}
+{% block content %}
+<h2><a href = "{% url 'account_create' %}">Добавить</a></h2>
+{% for object in accounts %}
+{{object}}
+</br>
+{% endfor %}
+{% endblock content %}

@@ -6,13 +6,17 @@ from .models import Account, Operation, Category
 
 class TransferForm(forms.Form):
 
-    date = forms.DateField(initial=timezone.now)
+    date = forms.DateField(initial=timezone.now,
+                           label='Дата')
 
     source = forms.ModelChoiceField(queryset=Account.objects.all(),
-                                    empty_label='Исходный счёт',)
+                                    empty_label='Исходный счёт',
+                                    label='Исходный счёт',)
     target = forms.ModelChoiceField(queryset=Account.objects.all(),
-                                    empty_label='Целевой счёт',)
-    value = forms.FloatField(min_value=0.0,)
+                                    empty_label='Целевой счёт',
+                                    label='Целевой счёт',)
+    value = forms.FloatField(min_value=0.0,
+                             label='Сумма',)
     
     def transfer(self):
         date = self.data['date']

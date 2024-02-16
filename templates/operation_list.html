@@ -1,6 +1,7 @@
 {% extends 'master.html' %}
 {% block content %}
-
+<h2><a href = "{% url 'operation_create' %}">Добавить</a></h2>
+<h2><a href = "{% url 'operation_transfer' %}">Перевести</a></h2>
 <table id="filteredTable" class="table">
     <thead>
         <tr class="header">
@@ -15,7 +16,7 @@
     <tbody>
         {% for operation in operations %}
         <tr>
-            <td><a href = "{% url 'operations_day' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
+            <td><a href = "{% url 'operation_list_daily' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
             <td>{{ operation.account }}</td>
             <td>            
                 {% if operation.type == 1 %}
