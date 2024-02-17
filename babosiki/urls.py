@@ -23,5 +23,5 @@ urlpatterns = [
     path('account/edit/<int:pk>', AccountUpdateView.as_view(), name='account_edit'),
     path('account/delete/<int:pk>', AccountDeleteView.as_view(), name='account_delete'),
     #
-    path('daily', DailyDeltaView.as_view(), name='daily'),
+    path('daily', DailyCostsView.as_view(), name='daily'),
 ]

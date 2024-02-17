@@ -12,7 +12,7 @@
 <a href="{% url 'operation_transfer' %}">Новый перевод</a>
 </br>
 </br>
-<table id="filteredTable" class="table">
+<table class="table table-sm">
     <thead>
         <tr class="header">
             <th>Дата</th>
@@ -65,9 +65,9 @@
                 <p style="color:hsla(50%,0,50%,1);">
                     {% endif %}
                     {% if operation.type == 1 %}
-                    {{operation.value}}
+                    {{operation.value}}р
                     {% else %}
-                    -{{operation.value}}
+                    -{{operation.value}}р
                     {% endif %}
                 </p>
             </td>

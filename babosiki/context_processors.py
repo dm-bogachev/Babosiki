@@ -6,14 +6,13 @@ def global_data(request):
 
         total_sum = 0
         for account in accounts:
-            if account.type == Account.DEBIT:
-                total_sum += account.initial_balance
             operations = Operation.objects.filter(account=account)
 
             for operation in operations:
                 total_sum += operation.value*operation.type
-            
-        
+
+            if account.type == Account.DEBIT:
+                total_sum += account.initial_balance
 
         return {'accounts': Account.objects.all(),
                 'total_money': total_sum}

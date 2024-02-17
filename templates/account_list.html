@@ -5,7 +5,7 @@
 </br>
 <h2><a href = "{% url 'account_create' %}">Новый счёт</a></h2>
 </br>
-<table class="table">
+<table class="table table-sm">
     <thead>
         <tr class="header">
             <th>Имя счёта</th>
@@ -24,7 +24,7 @@
             <td><a href = "{% url 'account_detail' pk=object.pk %}">{{object.name}}</a></td>
             <td>{{object.description}}</td>
             <td>                
-                {% if operation.type == 1 %}
+                {% if object.type == 1 %}
                     Дебетовый
                 {% else %}
                     Кредитный

@@ -6,7 +6,7 @@
 <a href="{% url 'operation_transfer' %}">Новый перевод</a>
 </br>
 </br>
-<table class="table">
+<table class="table table-sm">
     <thead>
         <tr class="header">
             <th>Дата</th>
@@ -30,7 +30,7 @@
                 {% if operation.account.type == -1 %}
                 CRED
                 {% endif %}
-                {{ operation.account }}
+                <a href="{% url 'account_detail' pk=operation.account.pk %}">{{ operation.account }}</a>
             </td>
             <td>
                 {% if operation.type == 1 %}

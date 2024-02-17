@@ -1,10 +1,11 @@
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import *
 from django.urls import reverse_lazy
 from babosiki.forms import * 
 
-class OperationTransferFormView(FormView):
+class OperationTransferFormView(LoginRequiredMixin, FormView ):
     template_name = 'operation_transfer.html'
     form_class = TransferForm
     success_url = reverse_lazy('operation_list')
@@ -17,8 +18,17 @@ class OperationTransferFormView(FormView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        accounts = Account.objects.filter(user=self.request.user)
+        context['form'].fields['source'].queryset = accounts
+        context['form'].fields['target'].queryset = accounts
+        #
+        return context
 
-class OperationListView(TemplateView):
+class OperationListView(LoginRequiredMixin, TemplateView):
+    login_url = 'login'
     template_name = "operation_list.html"
 
     def get_context_data(self, **kwargs):
@@ -29,7 +39,9 @@ class OperationListView(TemplateView):
         return context
     
 
-class OperationDailyListView(TemplateView):
+class OperationDailyListView(LoginRequiredMixin, TemplateView):
+    
+    login_url = 'login'
     
     template_name = "operation_daily_list.html"
 
@@ -49,7 +61,9 @@ class OperationDailyListView(TemplateView):
         return context
     
 
-class OperationCreateView(CreateView):
+class OperationCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    
     model = Operation
     fields = '__all__'
 
@@ -65,8 +79,16 @@ class OperationCreateView(CreateView):
         form.instance.user = self.request.user
         return super(OperationCreateView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        accounts = Account.objects.filter(user=self.request.user)
+        context['form'].fields['account'].queryset = accounts
+        #
+        return context
 
-class OperationUpdateView(UpdateView):
+class OperationUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    
     model = Operation
     fields = '__all__'
 
@@ -83,7 +105,9 @@ class OperationUpdateView(UpdateView):
         return super(OperationUpdateView, self).form_valid(form)
 
 
-class OperationDeleteView(DeleteView):
+class OperationDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    
     model = Operation
 
     template_name = 'operation_delete.html'
@@ -95,12 +119,16 @@ class OperationDeleteView(DeleteView):
         return reverse_lazy('operation_list')
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
+    login_url = 'login'
+    
     model = Category
     template_name = 'category_list.html'
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    
     model = Category
     fields = '__all__'
     template_name = 'category_create.html'
@@ -109,7 +137,9 @@ class CategoryCreateView(CreateView):
         return reverse_lazy('category_list')
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    
     model = Category
     fields = '__all__'
     template_name = 'category_create.html'
@@ -118,7 +148,9 @@ class CategoryUpdateView(UpdateView):
         return reverse_lazy('category_list')
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    
     model = Category
     template_name = 'category_delete.html'
 
@@ -126,7 +158,9 @@ class CategoryDeleteView(DeleteView):
         return reverse_lazy('category_list')
 
 
-class AccountListView(TemplateView):
+class AccountListView(LoginRequiredMixin, TemplateView):
+    login_url = 'login'
+    
     template_name = "account_list.html"
 
     def get_context_data(self, **kwargs):
@@ -137,6 +171,7 @@ class AccountListView(TemplateView):
             total_sum = 0
             for operation in operations:
                 total_sum += operation.type*operation.value
+            total_sum += account.initial_balance
             account_values[account] = total_sum
         context = super().get_context_data(**kwargs)
         context['accounts'] = accounts
@@ -144,7 +179,9 @@ class AccountListView(TemplateView):
         return context
 
 
-class AccountCreateView(CreateView):
+class AccountCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    
     model = Account
     fields = '__all__'
     template_name = 'account_create.html'
@@ -153,7 +190,9 @@ class AccountCreateView(CreateView):
         return reverse_lazy('account_list')
 
 
-class AccountUpdateView(UpdateView):
+class AccountUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    
     model = Account
     fields = '__all__'
     template_name = 'account_create.html'
@@ -162,7 +201,9 @@ class AccountUpdateView(UpdateView):
         return reverse_lazy('account_list')
 
 
-class AccountDeleteView(DeleteView):
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    
     model = Account
     template_name = 'account_delete.html'
 
@@ -170,12 +211,29 @@ class AccountDeleteView(DeleteView):
         return reverse_lazy('account_list')
 
 
-class AccountDetailView(DetailView):
+class AccountDetailView(LoginRequiredMixin, DetailView):
+    login_url = 'login'
+    
     model = Account
     template_name = 'account_detail.html'    
 
+    def get_context_data(self, **kwargs):
+        operations = Operation.objects.filter(account=self.object.pk)
 
-class DailyDeltaView(TemplateView):
+        total_sum = 0
+        for operation in operations:
+            total_sum += operation.type*operation.value
+        total_sum += self.object.initial_balance
+        
+        context = super().get_context_data(**kwargs)
+        context['operations'] = operations
+        context['total_sum'] = total_sum
+        return context
+
+
+class DailyCostsView(LoginRequiredMixin, TemplateView):
+    login_url = 'login'
+    
     
     template_name = 'daily_costs.html'
 

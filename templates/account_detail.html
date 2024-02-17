@@ -1,6 +1,112 @@
 {% extends 'master.html' %}
 {% block content %}
-<h2><a href = "{% url 'account_create' %}">Добавить</a></h2>
-{{object}}
+<h1>Счёт {{object}}</h1>
+<h3>{{object.description}}</h3>
+<table class="table table-sm">
+    <thead>
+        <tr class="header">
+            <th>Тип</th>
+            <th>Начальный баланс</th>
+            <th>Вычисляемый</th>
+            <th>Баланс</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>                
+                {% if operation.type == 1 %}
+                    Дебетовый
+                {% else %}
+                    Кредитный
+                {% endif %}
+            </td>
+            <td>{{object.initial_balance}}р</td>
+            <td>                
+                {% if object.calculated == True %}
+                    Да
+                {% else %}
+                    Нет
+                {% endif %}
+            </td>
+            <td>
+                {{total_sum}}р
+            </td>
+            <td><a href = "{% url 'account_edit' pk=object.pk %}">Изменить</a> | <a href = "{% url 'account_delete' pk=object.pk %}">Удалить</a></td>
+        </tr>
+    </tbody>
+</table>
+<h1>Список операций:</h1>
 </br>
+<a href="{% url 'operation_create' %}">Новая операция</a> |
+<a href="{% url 'operation_transfer' %}">Новый перевод</a>
+</br>
+</br>
+<table class="table table-sm">
+    <thead>
+        <tr class="header">
+            <th>Дата</th>
+            <th>Счёт</th>
+            <th>Тип</th>
+            <th>Категория</th>
+            <th>Описание</th>
+            <th>Сумма</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for operation in operations %}
+        <tr>
+            <td><a href="{% url 'operation_list_daily' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
+            <td>
+                {% if operation.account.calculated == False %}
+                CALC
+                {% endif %}
+                {% if operation.account.type == -1 %}
+                CRED
+                {% endif %}
+                {{ operation.account }}
+            </td>
+            <td>
+                {% if operation.type == 1 %}
+                Пополнение
+                {% else %}
+                Списание
+                {% endif %}
+            </td>
+            <td>
+                {% if operation.category %}
+                {{operation.category}}
+                {% else %}
+                Не указана
+                {% endif %}
+            </td>
+            <td>
+                {% if operation.description %}
+                {{operation.description}}
+                {% else %}
+                Не указано
+                {% endif %}
+            </td>
+            <td>
+                {% if operation.account.calculated == False or operation.account.type == -1 %}
+                <p style="color:hsla(0,100%,50%,1);">
+                    {% else %}
+                <p style="color:hsla(50%,0,50%,1);">
+                    {% endif %}
+                    {% if operation.type == 1 %}
+                    {{operation.value}}р
+                    {% else %}
+                    -{{operation.value}}р
+                    {% endif %}
+                </p>
+            </td>
+            <td><a href="{% url 'operation_edit' pk=operation.pk %}">Изменить</a> | <a
+                    href="{% url 'operation_delete' pk=operation.pk %}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock content %}
