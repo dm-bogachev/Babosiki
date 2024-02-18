@@ -29,7 +29,7 @@
         <tr class="table-secondary">
         {%endif%}
             <td><a href="{% url 'account_detail' pk=object.pk %}">{{object.name}}</a></td>
-            <td>{{object.description}}</td>
+            <td>{{object.comment}}</td>
             <td>
                 {% if object.type == 1 %}
                 Дебетовый

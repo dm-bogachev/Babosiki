@@ -16,6 +16,9 @@ class TransferForm(forms.Form):
     target = forms.ModelChoiceField(queryset=Account.objects.all(),
                                     empty_label='Целевой счёт',
                                     label='Целевой счёт',)
+    description = forms.CharField(max_length=128,
+                                  label='Комментарий',)
+
     value = forms.FloatField(min_value=0.0,
                              label='Сумма',)
     
