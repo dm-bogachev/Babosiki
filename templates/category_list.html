@@ -1,8 +1,26 @@
 {% extends 'master.html' %}
 {% block content %}
-<h1><a href = "{% url 'category_create' %}">Добавить</a></h1>
-{% for object in object_list %}
-<h2>{{object}}  <a href = "{% url 'category_edit'  pk=object.pk %}">Изменить</a>  |  <a href = "{% url 'category_edit' pk=object.pk %}">Удалить</a></h2>
-</br>
-{% endfor %}
+<h1><a href="{% url 'category_create' %}">Добавить</a></h1>
+
+<table class="table table-sm">
+    <thead>
+        <tr class="header">
+            <th></th>
+            <th></th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td>{{object}}</td>
+            <td><a href="{% url 'category_edit'  pk=object.pk %}">Изменить</a></td>
+            <td><a href="{% url 'category_edit' pk=object.pk %}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
 {% endblock content %}
