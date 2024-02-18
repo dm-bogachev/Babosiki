@@ -183,11 +183,15 @@ class AccountCreateView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     
     model = Account
-    fields = '__all__'
+    fields = ['name', 'comment', 'type', 'initial_balance', 'calculated']
     template_name = 'account_create.html'
 
     def get_success_url(self):
         return reverse_lazy('account_list')
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(AccountCreateView, self).form_valid(form)
 
 
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
