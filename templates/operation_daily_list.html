@@ -64,11 +64,12 @@
                 {% endif %}
             </td>
             <td>
+                <!-->
                 {% if operation.account.calculated == False or operation.account.type == -1 %}
                 <p style="color:hsla(0,100%,50%,1);">
                     {% else %}
                 <p style="color:hsla(50%,0,50%,1);">
-                    {% endif %}
+                    {% endif %}-->
                     {% if operation.type == 1 %}
                     {{operation.value}}р
                     {% else %}
