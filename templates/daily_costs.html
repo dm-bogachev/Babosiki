@@ -1,39 +1,49 @@
-
 {% extends 'master.html' %}
 {% block content %}
 
-{% for date, accounts in delta.items %}
-    <h1><a href="{% url 'operation_list_daily' date|date:"Y-m-d" %}">{{date}}</a></h1>
-    {% for account, value in accounts.items %}
-    <p>{{account}} : {{value}}</p>
-    {% endfor %}
-    <h2>
-        Итого: 
-        {% for cost_date, value in cost.items %}
-            {% if cost_date == date%}
-            {{value}}
-            {%endif%}
-        {% endfor %}
-    </h2>
-</br>
-{% endfor %}
-{% endblock content %}
-<!--
-<table class="table">
+
+<table class="table table-sm">
     <thead>
         <tr class="header">
-            <th>Дата</th>
-            {% for date, accounts in delta.items %}
-                {% for account, value in accounts.items %}
-                    <th>{{account}}</th>
-                {% endfor %}
+            <th>Счета</th>
+            {% for account in accounts %}
+            <th><a href="{% url 'account_detail' pk=account.pk %}">{{ account }}</a></th>
             {% endfor %}
+            <th>Итого</th>
         </tr>
     </thead>
     <tbody>
+
+        {% for date, accounts in delta.items %}
         <tr>
-            
+            <td><a href="{% url 'operation_list_daily' date|date:"Y-m-d" %}">{{date}}</a></td>
+            {% for account, value in accounts.items %}
+            <td>{{value}}</td>
+            {% endfor %}
+            <td>{% for cost_date, value in cost.items %}
+                {% if cost_date == date%}
+                {{value}}
+                {%endif%}
+                {% endfor %}</td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
+<!--
+{% for date, accounts in delta.items %}
+<h1><a href="{% url 'operation_list_daily' date|date:" Y-m-d" %}">{{date}}</a></h1>
+{% for account, value in accounts.items %}
+<p>{{account}} : {{value}}</p>
+{% endfor %}
+<h2>
+    Итого:
+    {% for cost_date, value in cost.items %}
+    {% if cost_date == date%}
+    {{value}}
+    {%endif%}
+    {% endfor %}
+</h2>
+</br>
+{% endfor %}
+{% endblock content %}
 -->

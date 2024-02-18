@@ -26,15 +26,20 @@
     </thead>
     <tbody>
         {% for operation in operations %}
+        {% if operation.account.calculated %}
         <tr>
+        {% else %}
+        <tr class="table-secondary">
+        {% endif %}
             <td>{{ operation.date}}</td>
             <td>
+                <!--
                 {% if operation.account.calculated == False %}
                 CALC
                 {% endif %}
                 {% if operation.account.type == -1 %}
                 CRED
-                {% endif %}
+                {% endif %}-->
                 {{ operation.account }}
             </td>
             <td>

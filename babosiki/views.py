@@ -268,7 +268,7 @@ class DailyCostsView(LoginRequiredMixin, TemplateView):
         for date in self.dates_delta:
             daily_cost = 0
             for account in self.dates_delta[date]:
-                if account.calculated or account.type == 1:
+                if account.calculated: #or account.type == 1:
                     daily_cost += self.dates_delta[date][account]
 
             daily_costs[date] = daily_cost
@@ -279,8 +279,9 @@ class DailyCostsView(LoginRequiredMixin, TemplateView):
         self.__get_unique_dates()
         self.__process_date_operations()
         self.__get_daily_costs()
-
+        accounts = Account.objects.filter(user=self.request.user)
         context = super().get_context_data(**kwargs)
         context['delta'] = self.dates_delta
         context['cost'] = self.daily_costs
+        context['accounts'] = accounts
         return context

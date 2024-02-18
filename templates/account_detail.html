@@ -14,7 +14,11 @@
         </tr>
     </thead>
     <tbody>
+        {% if operation.account.calculated %}
         <tr>
+        {% else %}
+        <tr class="table-secondary">
+        {% endif %}
             <td>                
                 {% if operation.type == 1 %}
                     Дебетовый
@@ -58,7 +62,11 @@
     </thead>
     <tbody>
         {% for operation in operations %}
+        {% if operation.account.calculated %}
         <tr>
+        {% else %}
+        <tr class="table-secondary">
+        {% endif %}
             <td><a href="{% url 'operation_list_daily' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
             <td>
                 {% if operation.account.calculated == False %}

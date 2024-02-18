@@ -1,9 +1,8 @@
-
 {% extends 'master.html' %}
 {% block content %}
 <h1>Список счетов:</h1>
 </br>
-<h2><a href = "{% url 'account_create' %}">Новый счёт</a></h2>
+<h2><a href="{% url 'account_create' %}">Новый счёт</a></h2>
 </br>
 <table class="table table-sm">
     <thead>
@@ -20,32 +19,41 @@
     </thead>
     <tbody>
         {% for object in accounts %}
-        <tr>
-            <td><a href = "{% url 'account_detail' pk=object.pk %}">{{object.name}}</a></td>
+        {% if object.calculated %}
+            {% if object.type == 1 %}
+                <tr>
+            {%else%}
+                <tr class="table-warning">
+            {%endif%}
+        {%else%}
+        <tr class="table-secondary">
+        {%endif%}
+            <td><a href="{% url 'account_detail' pk=object.pk %}">{{object.name}}</a></td>
             <td>{{object.description}}</td>
-            <td>                
+            <td>
                 {% if object.type == 1 %}
-                    Дебетовый
+                Дебетовый
                 {% else %}
-                    Кредитный
+                Кредитный
                 {% endif %}
             </td>
             <td>{{object.initial_balance}}р</td>
-            <td>                
+            <td>
                 {% if object.calculated == True %}
-                    Да
+                Да
                 {% else %}
-                    Нет
+                Нет
                 {% endif %}
             </td>
             <td>
                 {% for account, value in account_values.items %}
-                    {% if account == object %}
-                        {{value}}р
-                    {%endif%}
+                {% if account == object %}
+                {{value}}р
+                {%endif%}
                 {% endfor %}
             </td>
-            <td><a href = "{% url 'account_edit' pk=object.pk %}">Изменить</a> | <a href = "{% url 'account_delete' pk=object.pk %}">Удалить</a></td>
+            <td><a href="{% url 'account_edit' pk=object.pk %}">Изменить</a> | <a
+                    href="{% url 'account_delete' pk=object.pk %}">Удалить</a></td>
         </tr>
         {% endfor %}
     </tbody>

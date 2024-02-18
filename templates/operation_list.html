@@ -21,15 +21,20 @@
     </thead>
     <tbody>
         {% for operation in operations %}
+        {% if operation.account.calculated %}
         <tr>
+        {% else %}
+        <tr class="table-secondary">
+        {% endif %}
             <td><a href="{% url 'operation_list_daily' operation.date|date:"Y-m-d" %}">{{operation.date}}</a></td>
             <td>
+                <!--
                 {% if operation.account.calculated == False %}
                 CALC
                 {% endif %}
                 {% if operation.account.type == -1 %}
                 CRED
-                {% endif %}
+                {% endif %}-->
                 <a href="{% url 'account_detail' pk=operation.account.pk %}">{{ operation.account }}</a>
             </td>
             <td>
