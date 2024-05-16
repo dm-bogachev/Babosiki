@@ -50,8 +50,8 @@ class Operation(models.Model):
     INCOME = 1
     OUTCOME = -1
     TYPES =( 
-    (INCOME, "Пополнение"), 
-    (OUTCOME, "Расход"),) 
+    (OUTCOME, "Расход"),
+    (INCOME, "Пополнение"),) 
     
     type = models.IntegerField(choices = TYPES,
                                 verbose_name='Тип',) 

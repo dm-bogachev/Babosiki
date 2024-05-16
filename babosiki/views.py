@@ -33,7 +33,7 @@ class OperationListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         accounts = Account.objects.filter(user=self.request.user)
-        operations = Operation.objects.filter(account__id__in=accounts.all())
+        operations = Operation.objects.filter(account__id__in=accounts.all()).order_by('-date')
         context = super().get_context_data(**kwargs)
         context['operations'] = operations
         return context
@@ -48,13 +48,13 @@ class OperationDailyListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         date = self.kwargs.get('date', None)
         accounts = Account.objects.filter(user=self.request.user, calculated=True)
-        operations = Operation.objects.filter(date=date, account__id__in=accounts.all())
+        operations = Operation.objects.filter(date=date, account__id__in=accounts.all()).order_by('-date')
         delta = 0.0
         for operation in operations:
             delta += operation.value*operation.type
 
         accounts = Account.objects.filter(user=self.request.user)
-        operations = Operation.objects.filter(date=date, account__id__in=accounts.all())
+        operations = Operation.objects.filter(date=date, account__id__in=accounts.all()).order_by('-date')
         context = super().get_context_data(**kwargs)
         context['operations'] = operations
         context['delta'] = delta
@@ -83,6 +83,7 @@ class OperationCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         accounts = Account.objects.filter(user=self.request.user)
         context['form'].fields['account'].queryset = accounts
+        context['form'].fields['category'].queryset = Category.objects.all().order_by('name')
         #
         return context
 
@@ -123,6 +124,7 @@ class CategoryListView(LoginRequiredMixin, ListView):
     login_url = 'login'
     
     model = Category
+    ordering = ['name']
     template_name = 'category_list.html'
 
 
@@ -222,7 +224,7 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     template_name = 'account_detail.html'    
 
     def get_context_data(self, **kwargs):
-        operations = Operation.objects.filter(account=self.object.pk)
+        operations = Operation.objects.filter(account=self.object.pk).order_by('-date')
 
         total_sum = 0
         for operation in operations:
@@ -243,7 +245,7 @@ class DailyCostsView(LoginRequiredMixin, TemplateView):
 
     def __get_unique_dates(self):
         accounts = Account.objects.filter(user=self.request.user)
-        operations = Operation.objects.filter(account__id__in=accounts.all())
+        operations = Operation.objects.filter(account__id__in=accounts.all()).order_by('-date')
         dates = []
         
         for operation in operations:
@@ -260,7 +262,7 @@ class DailyCostsView(LoginRequiredMixin, TemplateView):
             for account in accounts:
                 daily_costs = 0
                 operations = Operation.objects.filter(account=account,
-                                                      date=date)
+                                                      date=date).order_by('-date')
                 for operation in operations:
                     daily_costs += operation.type*operation.value
                 accounts_delta[account] = daily_costs
