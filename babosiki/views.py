@@ -1,3 +1,4 @@
+import decimal
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,6 +51,7 @@ class OperationDailyListView(LoginRequiredMixin, TemplateView):
         accounts = Account.objects.filter(user=self.request.user, calculated=True)
         operations = Operation.objects.filter(date=date, account__id__in=accounts.all()).order_by('-date')
         delta = 0.0
+        delta = decimal.Decimal(delta)
         for operation in operations:
             delta += operation.value*operation.type
 
