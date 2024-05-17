@@ -34,7 +34,7 @@ class OperationListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         accounts = Account.objects.filter(user=self.request.user)
-        operations = Operation.objects.filter(account__id__in=accounts.all()).order_by('-date')
+        operations = Operation.objects.filter(account__id__in=accounts.all()).order_by('-date','-id')
         context = super().get_context_data(**kwargs)
         context['operations'] = operations
         return context
